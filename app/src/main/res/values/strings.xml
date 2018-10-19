@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Movies OMDb</string>
+
+    <string name="hint_autcomplete">Try to search something</string>
+    <string name="img_no_results_content_description">Results no found</string>
 </resources>
