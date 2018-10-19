@@ -10,11 +10,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
 import com.gustavoforero.moviesomdb.R;
-import com.gustavoforero.moviesomdb.util.KeyboardHelper;
 import com.gustavoforero.moviesomdb.domain.Movie;
 import com.gustavoforero.moviesomdb.net.OMDbApi;
 import com.gustavoforero.moviesomdb.net.OMDbRestClient;
 import com.gustavoforero.moviesomdb.net.responses.SearchResponse;
+import com.gustavoforero.moviesomdb.util.Util;
 import com.jakewharton.rxbinding3.widget.RxTextView;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         .map(textViewTextChangeEvent -> textViewTextChangeEvent.getText().toString())
                         .filter(s -> s.length() >= MIN_LENGTH_TO_START)
                         .observeOn(Schedulers.io())
-                        .switchMap(s -> OMDbRestClient.INSTANCE.getOmDbApi().searchMovieByTitle(OMDbApi.Companion.getSearchUrl(s)))
+                        .switchMap(s -> OMDbRestClient.INSTANCE.getApi().searchMoviesByTitle(OMDbApi.getSearchUrl(s)))
                         .observeOn(AndroidSchedulers.mainThread())
                         .retry();
 
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 autocompleteResponseObservable
                         .subscribe(
                                 response -> {
-                                    KeyboardHelper.Companion.hideKeyboard(this);
-                                    if (response.getResponse()) {
+                                    Util.hideKeyBoard(this);
+                                    if (response.isSuccess()) {
                                         mImgNoResults.setVisibility(View.GONE);
                                         mRvMovies.setVisibility(View.VISIBLE);
                                         updateMovies(response.getSearch());
